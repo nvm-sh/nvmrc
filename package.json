@@ -1,0 +1,27 @@
+{
+	"name": "nvmrc",
+	"version": "0.0.0",
+	"description": "command-line tool to validate a `.nvmrc` file",
+	"main": false,
+	"exports": {
+		"./package.json": "./package.json"
+	},
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/nvm-sh/nvmrc.git"
+	},
+	"keywords": [
+		"nvm",
+		"nvmrc",
+		"validate"
+	],
+	"author": "Jordan Harband <ljharb@gmail.com>",
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/nvm-sh/nvmrc/issues"
+	},
+	"homepage": "https://github.com/nvm-sh/nvmrc#readme"
+}
