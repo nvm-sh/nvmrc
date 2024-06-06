@@ -1,6 +1,6 @@
 {
 	"name": "nvmrc",
-	"version": "0.0.0",
+	"version": "1.0.0",
 	"description": "command-line tool to validate a `.nvmrc` file",
 	"bin": "./nvmrc.mjs",
 	"main": false,
