@@ -31,8 +31,7 @@ additionally, a single bare nvm-recognized version-ish must be present (after st
 
 	console.warn(`
 non-commented content parsed:
-${rawOptions.join('\n')}
-`);
+${rawOptions.join('\n')}`);
 
 	process.exit(1);
 }
