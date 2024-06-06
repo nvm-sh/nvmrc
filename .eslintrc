@@ -1,0 +1,10 @@
+{
+	"root": true,
+
+	"extends": "@ljharb/eslint-config/node/20",
+
+	"rules": {
+		"no-console": "off",
+		"no-process-exit": "off",
+	},
+}
