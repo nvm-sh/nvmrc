@@ -1,6 +1,6 @@
 import { spawnSync } from 'child_process';
 import { join } from 'path';
-import { readdirSync } from 'fs';
+import { readFileSync, readdirSync } from 'fs';
 
 import test from 'tape';
 
@@ -34,13 +34,17 @@ test('nvmrc', async (t) => {
 		t.test(`fixture ${fixture}`, (st) => {
 			const cwd = join(fixtureDir, fixture);
 
-			const { stdout, status } = spawnSync(`${bin}`, { cwd });
+			const { status, stdout } = spawnSync(`${bin}`, { cwd });
 
 			st.equal(status, 0, 'yields a zero exit code');
 
 			const stripped = stripColors(`${stdout}`);
 
 			st.doesNotThrow(() => JSON.parse(stripped), `fixture ${fixture} is valid, yields ${stripped.replace(/\n\s*/g, ' ')}`);
+
+			const expected = JSON.parse(`${readFileSync(join(cwd, 'expected.json'))}`);
+
+			st.deepEqual(JSON.parse(stripped), expected, `fixture ${fixture} yields expected result`);
 
 			st.end();
 		});
@@ -66,6 +70,10 @@ test('nvmrc', async (t) => {
 				'additionally, a single bare nvm-recognized version-ish must be present (after stripping comments).',
 				'non-commented content parsed:',
 			]);
+
+			const expected = JSON.parse(`${readFileSync(join(cwd, 'expected.json'))}`);
+
+			st.deepEqual(lines.slice(6), expected, `fixture ${fixture} produces expected warning lines`);
 
 			st.end();
 		});
