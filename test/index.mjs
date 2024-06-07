@@ -8,31 +8,15 @@ import stripColors from 'strip-color';
 
 const fixtureDir = join(import.meta.dirname, 'fixtures');
 
-const fixtures = readdirSync(fixtureDir);
+const valid = readdirSync(join(fixtureDir, 'valid'));
+const invalid = readdirSync(join(fixtureDir, 'invalid'));
 
 test('nvmrc', async (t) => {
-	const valid = [
-		'basic',
-		'basic-comments',
-		'basic-with-comment',
-		'basic-with-npm',
-	];
-
-	const invalid = [
-		'basic-invalid',
-		'invalid',
-		'only-comments',
-		'pre-normalized',
-		'duplicate-pairs',
-	];
-
-	t.deepEqual(fixtures.sort(), valid.concat(invalid).sort(), 'all fixtures are accounted for');
-
 	const bin = join(import.meta.dirname, '../nvmrc.mjs');
 
 	for (const fixture of valid) {
 		t.test(`fixture ${fixture}`, (st) => {
-			const cwd = join(fixtureDir, fixture);
+			const cwd = join(fixtureDir, 'valid', fixture);
 
 			const { status, stdout } = spawnSync(`${bin}`, { cwd });
 
@@ -52,7 +36,7 @@ test('nvmrc', async (t) => {
 
 	for (const fixture of invalid) {
 		t.test(`fixture ${fixture}`, (st) => {
-			const cwd = join(fixtureDir, fixture);
+			const cwd = join(fixtureDir, 'invalid', fixture);
 
 			const { status, stderr } = spawnSync(`${bin}`, { cwd });
 
