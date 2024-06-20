@@ -1,18 +1,23 @@
 import { spawnSync } from 'child_process';
-import { join } from 'path';
+import { dirname as pathDirname, join } from 'path';
 import { readFileSync, readdirSync } from 'fs';
 
 import test from 'tape';
 
 import stripColors from 'strip-color';
 
-const fixtureDir = join(import.meta.dirname, 'fixtures');
+const {
+	url,
+	dirname = pathDirname((await import('url')).fileURLToPath(url)),
+} = import.meta;
+
+const fixtureDir = join(dirname, 'fixtures');
 
 const valid = readdirSync(join(fixtureDir, 'valid'));
 const invalid = readdirSync(join(fixtureDir, 'invalid'));
 
 test('nvmrc', async (t) => {
-	const bin = join(import.meta.dirname, '../nvmrc.mjs');
+	const bin = join(dirname, '../nvmrc.mjs');
 
 	t.test('--help', async (st) => {
 		const { status, stdout, stderr } = spawnSync(`${bin}`, ['--help']);
@@ -29,13 +34,13 @@ test('nvmrc', async (t) => {
 		st.equal(String(stderr), '', 'yields no stderr');
 		st.notEqual(
 			String(stdout),
-			`v${(await import('module')).createRequire(import.meta.url)('../package.json').version}`,
+			`v${(await import('module')).createRequire(url)('../package.json').version}`,
 			'version is as expected',
 		);
 	});
 
 	t.test('nonexistent file', async (st) => {
-		const cwd = import.meta.dirname;
+		const cwd = dirname;
 		const { status, stdout, stderr } = spawnSync(`${bin}`, { cwd });
 		st.notEqual(status, 0, 'yields a nonzero exit code');
 		st.equal(String(stdout), '', 'yields no stdout');
