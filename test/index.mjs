@@ -14,8 +14,52 @@ const invalid = readdirSync(join(fixtureDir, 'invalid'));
 test('nvmrc', async (t) => {
 	const bin = join(import.meta.dirname, '../nvmrc.mjs');
 
+	t.test('--help', async (st) => {
+		const { status, stdout, stderr } = spawnSync(`${bin}`, ['--help']);
+
+		st.equal(status, 0, 'yields a zero exit code');
+		st.equal(String(stderr), '', 'yields no stderr');
+		st.notEqual(String(stdout).replace(/^\s+|\s+$/g, ''), 'trimmed stdout is nonempty');
+	});
+
+	t.test('--version', async (st) => {
+		const { status, stdout, stderr } = spawnSync(`${bin}`, ['--version']);
+
+		st.equal(status, 0, 'yields a zero exit code');
+		st.equal(String(stderr), '', 'yields no stderr');
+		st.notEqual(
+			String(stdout),
+			`v${(await import('module')).createRequire(import.meta.url)('../package.json').version}`,
+			'version is as expected',
+		);
+	});
+
+	t.test('nonexistent file', async (st) => {
+		const cwd = import.meta.dirname;
+		const { status, stdout, stderr } = spawnSync(`${bin}`, { cwd });
+		st.notEqual(status, 0, 'yields a nonzero exit code');
+		st.equal(String(stdout), '', 'yields no stdout');
+		st.notEqual(
+			String(stderr),
+			'',
+			'stderr is nonempty',
+		);
+	});
+
+	t.test('too many files', async (st) => {
+		const { status, stdout, stderr } = spawnSync(`${bin}`, ['a', 'b']);
+
+		st.notEqual(status, 0, 'yields a nonzero exit code');
+		st.equal(String(stdout), '', 'yields no stdout');
+		st.notEqual(
+			String(stderr),
+			'',
+			'stderr is nonempty',
+		);
+	});
+
 	for (const fixture of valid) {
-		t.test(`fixture ${fixture}`, (st) => {
+		t.test(`fixture ${fixture}`, async (st) => {
 			const cwd = join(fixtureDir, 'valid', fixture);
 
 			const { status, stdout } = spawnSync(`${bin}`, { cwd });
@@ -29,13 +73,11 @@ test('nvmrc', async (t) => {
 			const expected = JSON.parse(`${readFileSync(join(cwd, 'expected.json'))}`);
 
 			st.deepEqual(JSON.parse(stripped), expected, `fixture ${fixture} yields expected result`);
-
-			st.end();
 		});
 	}
 
 	for (const fixture of invalid) {
-		t.test(`fixture ${fixture}`, (st) => {
+		t.test(`fixture ${fixture}`, async (st) => {
 			const cwd = join(fixtureDir, 'invalid', fixture);
 
 			const { status, stderr } = spawnSync(`${bin}`, { cwd });
@@ -58,8 +100,6 @@ test('nvmrc', async (t) => {
 			const expected = JSON.parse(`${readFileSync(join(cwd, 'expected.json'))}`);
 
 			st.deepEqual(lines.slice(6), expected, `fixture ${fixture} produces expected warning lines`);
-
-			st.end();
 		});
 	}
 });
