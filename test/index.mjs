@@ -93,18 +93,21 @@ test('nvmrc', async (t) => {
 
 			const lines = stripped.split('\n').map((x) => x.trim()).filter(Boolean);
 
-			st.deepEqual(lines.slice(0, 6), [
+			const expectedLines = [
 				'invalid .nvmrc!',
 				'all non-commented content (anything after # is a comment) must be either:',
 				'- a single bare nvm-recognized version-ish',
 				'- or, multiple distinct key-value pairs, each key/value separated by a single equals sign (=)',
 				'additionally, a single bare nvm-recognized version-ish must be present (after stripping comments).',
+				'Note that nvm does not understand semver ranges.',
 				'non-commented content parsed:',
-			]);
+			];
+
+			st.deepEqual(lines.slice(0, expectedLines.length), expectedLines);
 
 			const expected = JSON.parse(`${readFileSync(join(cwd, 'expected.json'))}`);
 
-			st.deepEqual(lines.slice(6), expected, `fixture ${fixture} produces expected warning lines`);
+			st.deepEqual(lines.slice(expectedLines.length), expected, `fixture ${fixture} produces expected warning lines`);
 		});
 	}
 });

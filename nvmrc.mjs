@@ -65,7 +65,12 @@ const optionsEntries = rawOptions.map((x) => ((/[=]/).test(x)
 
 const map = new Map(optionsEntries);
 
-if (map.size !== optionsEntries.length || !map.has('node') || rawOptions.filter((x) => !x.includes('=')).length !== 1) {
+if (
+	map.size !== optionsEntries.length
+	|| !map.has('node')
+	|| rawOptions.filter((x) => !x.includes('=')).length !== 1
+	|| (/^\s*[~^><=]/).test(map.get('node').trim())
+) {
 	console.error(`
 invalid .nvmrc!
 all non-commented content (anything after # is a comment) must be either:
@@ -73,6 +78,8 @@ all non-commented content (anything after # is a comment) must be either:
   - or, multiple distinct key-value pairs, each key/value separated by a single equals sign (=)
 
 additionally, a single bare nvm-recognized version-ish must be present (after stripping comments).
+
+Note that nvm does not understand semver ranges.
 `);
 
 	console.warn(`
