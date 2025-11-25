@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v1.1.1](https://github.com/nvm-sh/nvmrc/compare/v1.1.0...v1.1.1) - 2025-11-24
+
+### Fixed
+
+- [Fix] reject invalid semver ranges [`#2`](https://github.com/nvm-sh/nvmrc/issues/2)
+
+### Commits
+
+- [Dev Deps] update `@ljharb/eslint-config`, `auto-changelog`, `c8`, `tape` [`62f24bc`](https://github.com/nvm-sh/nvmrc/commit/62f24bc7dc58804044c5fbb4eeb867936c34c6fb)
+- [Dev Deps] update `@ljharb/eslint-config`, `eslint`, `npmignore` [`32ee92c`](https://github.com/nvm-sh/nvmrc/commit/32ee92cbd833df225229f77dd57a577c1577fb0b)
+- [Tests] replace `aud` with `npm audit` [`bea2633`](https://github.com/nvm-sh/nvmrc/commit/bea2633dd1cd50bcb0dffbcd7575af79a2058725)
+- [meta] add missing peer dep [`673d7d9`](https://github.com/nvm-sh/nvmrc/commit/673d7d92a76d69a54b766b2e0c21474f7d3af908)
+
 ## [v1.1.0](https://github.com/nvm-sh/nvmrc/compare/v1.0.0...v1.1.0) - 2024-06-20
 
 ### Commits
