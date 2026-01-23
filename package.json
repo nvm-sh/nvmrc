@@ -46,7 +46,6 @@
 		"in-publish": "^2.0.1",
 		"npmignore": "^0.3.2",
 		"safe-publish-latest": "^2.0.0",
-		"strip-color": "^0.1.0",
 		"tape": "^5.9.0"
 	},
 	"testling": {

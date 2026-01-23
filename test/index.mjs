@@ -1,10 +1,9 @@
 import { spawnSync } from 'child_process';
 import { dirname as pathDirname, join } from 'path';
 import { readFileSync, readdirSync } from 'fs';
+import { stripVTControlCharacters } from 'util';
 
 import test from 'tape';
-
-import stripColors from 'strip-color';
 
 const {
 	url,
@@ -71,7 +70,7 @@ test('nvmrc', async (t) => {
 
 			st.equal(status, 0, 'yields a zero exit code');
 
-			const stripped = stripColors(`${stdout}`);
+			const stripped = stripVTControlCharacters(`${stdout}`);
 
 			st.doesNotThrow(() => JSON.parse(stripped), `fixture ${fixture} is valid, yields ${stripped.replace(/\n\s*/g, ' ')}`);
 
@@ -89,7 +88,7 @@ test('nvmrc', async (t) => {
 
 			st.notEqual(status, 0, `fixture ${fixture} did not produce a zero exit code`);
 
-			const stripped = stripColors(`${stderr}`);
+			const stripped = stripVTControlCharacters(`${stderr}`);
 
 			const lines = stripped.split('\n').map((x) => x.trim()).filter(Boolean);
 
