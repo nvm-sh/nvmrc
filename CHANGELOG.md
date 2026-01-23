@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v1.2.0](https://github.com/nvm-sh/nvmrc/compare/v1.1.1...v1.2.0) - 2026-01-22
+
+### Fixed
+
+- [New] add API entrypoint, with types [`#4`](https://github.com/nvm-sh/nvmrc/issues/4)
+
+### Commits
+
+- [Dev Deps] update `eslint` [`8c09e12`](https://github.com/nvm-sh/nvmrc/commit/8c09e12bd91acd3ceaadaa263158043e692bfec0)
+- [Refactor] use stripVTControlCharacters instead of `strip-color` [`8b536b4`](https://github.com/nvm-sh/nvmrc/commit/8b536b42edc216ed31161476fbb4b94ab8eed5b1)
+- [Dev Deps] update `@ljharb/eslint-config`, `npmignore` [`e8fda24`](https://github.com/nvm-sh/nvmrc/commit/e8fda2452581a34c2a48930776c67c8f4770dc53)
+
 ## [v1.1.1](https://github.com/nvm-sh/nvmrc/compare/v1.1.0...v1.1.1) - 2025-11-24
 
 ### Fixed
