@@ -5,6 +5,8 @@ import { stripVTControlCharacters } from 'util';
 
 import test from 'tape';
 
+import parseNVMRC, { isValidNVMRC } from '../index.mjs';
+
 const {
 	url,
 	dirname = pathDirname((await import('url')).fileURLToPath(url)),
@@ -109,4 +111,135 @@ test('nvmrc', async (t) => {
 			st.deepEqual(lines.slice(expectedLines.length), expected, `fixture ${fixture} produces expected warning lines`);
 		});
 	}
+});
+
+test('parseNVMRC', async (t) => {
+	t.test('valid inputs', async (st) => {
+		for (const fixture of valid) {
+			const cwd = join(fixtureDir, 'valid', fixture);
+			const contents = String(readFileSync(join(cwd, '.nvmrc')));
+			const expected = JSON.parse(String(readFileSync(join(cwd, 'expected.json'))));
+
+			const result = parseNVMRC(contents);
+
+			st.ok(result.success, `fixture ${fixture} succeeds`);
+			if (result.success) {
+				st.deepEqual(result.options, expected, `fixture ${fixture} yields expected options`);
+			}
+		}
+	});
+
+	t.test('invalid inputs', async (st) => {
+		for (const fixture of invalid) {
+			const cwd = join(fixtureDir, 'invalid', fixture);
+			const contents = String(readFileSync(join(cwd, '.nvmrc')));
+			const expected = JSON.parse(String(readFileSync(join(cwd, 'expected.json'))));
+
+			const result = parseNVMRC(contents);
+
+			st.notOk(result.success, `fixture ${fixture} fails`);
+			st.ok('errorMessage' in result, `fixture ${fixture} has errorMessage`);
+			st.ok('rawOptions' in result, `fixture ${fixture} has rawOptions`);
+			if (!result.success) {
+				st.deepEqual(result.rawOptions, expected, `fixture ${fixture} yields expected rawOptions`);
+			}
+		}
+	});
+
+	t.test('returns success: true with options for valid content', async (st) => {
+		const result = parseNVMRC('lts/*');
+
+		st.deepEqual(result, {
+			options: { node: 'lts/*' },
+			success: true,
+		});
+	});
+
+	t.test('returns success: false with errorMessage for invalid content', async (st) => {
+		const result = parseNVMRC('^20');
+
+		st.equal(result.success, false);
+		if (!result.success) {
+			st.ok(result.errorMessage.includes('invalid .nvmrc!'));
+			st.deepEqual(result.rawOptions, ['^20']);
+		}
+	});
+
+	t.test('handles key=value pairs', async (st) => {
+		const result = parseNVMRC('20\nnpm=10\nyarn=1.22');
+
+		st.deepEqual(result, {
+			options: { node: '20', npm: '10', yarn: '1.22' },
+			success: true,
+		});
+	});
+
+	t.test('strips comments', async (st) => {
+		const result = parseNVMRC('20 # this is node version\n# full line comment\nnpm=10 # npm version');
+
+		st.deepEqual(result, {
+			options: { node: '20', npm: '10' },
+			success: true,
+		});
+	});
+});
+
+test('isValidNVMRC', async (t) => {
+	t.test('returns true for valid structure', async (st) => {
+		const rawOptions = ['20'];
+		/** @type {[string, string][]} */
+		const optionsEntries = [['node', '20']];
+		const map = new Map(optionsEntries);
+
+		st.ok(isValidNVMRC(rawOptions, optionsEntries, map));
+	});
+
+	t.test('returns true for valid structure with key=value pairs', async (st) => {
+		const rawOptions = ['20', 'npm=10'];
+		/** @type {[string, string][]} */
+		const optionsEntries = [['node', '20'], ['npm', '10']];
+		const map = new Map(optionsEntries);
+
+		st.ok(isValidNVMRC(rawOptions, optionsEntries, map));
+	});
+
+	t.test('returns false when map size differs from entries (duplicates)', async (st) => {
+		const rawOptions = ['foo=1', 'foo=2'];
+		/** @type {[string, string][]} */
+		const optionsEntries = [['foo', '1'], ['foo', '2']];
+		const map = new Map(optionsEntries);
+
+		st.notOk(isValidNVMRC(rawOptions, optionsEntries, map));
+	});
+
+	t.test('returns false when no node key', async (st) => {
+		const rawOptions = ['npm=10'];
+		/** @type {[string, string][]} */
+		const optionsEntries = [['npm', '10']];
+		const map = new Map(optionsEntries);
+
+		st.notOk(isValidNVMRC(rawOptions, optionsEntries, map));
+	});
+
+	t.test('returns false when multiple bare values', async (st) => {
+		const rawOptions = ['20', '22'];
+		/** @type {[string, string][]} */
+		const optionsEntries = [['node', '20'], ['node', '22']];
+		const map = new Map(optionsEntries);
+
+		st.notOk(isValidNVMRC(rawOptions, optionsEntries, map));
+	});
+
+	t.test('returns false for semver range prefixes', async (st) => {
+		const prefixes = ['^', '~', '>', '<', '>=', '<=', '='];
+
+		for (const prefix of prefixes) {
+			const rawOptions = [`${prefix}20`];
+			/** @type {[string, string][]} */
+			const optionsEntries = [['node', `${prefix}20`]];
+			const map = new Map(optionsEntries);
+
+			st.notOk(isValidNVMRC(rawOptions, optionsEntries, map), `rejects ${prefix} prefix`);
+		}
+	});
 });

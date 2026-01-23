@@ -4,7 +4,12 @@
 	"description": "command-line tool to validate a `.nvmrc` file",
 	"bin": "./nvmrc.mjs",
 	"main": false,
+	"types": "./index.d.mts",
 	"exports": {
+		".": {
+			"types": "./index.d.mts",
+			"default": "./index.mjs"
+		},
 		"./package.json": "./package.json"
 	},
 	"scripts": {
@@ -12,6 +17,7 @@
 		"prepublish": "not-in-publish || npm run prepublishOnly",
 		"prepublishOnly": "safe-publish-latest",
 		"lint": "eslint .",
+		"postlint": "tsc && attw -P",
 		"pretest": "npm run lint",
 		"tests-only": "NODE_OPTIONS='--no-warnings' c8 tape 'test/*.mjs'",
 		"test": "npm run tests-only",
@@ -38,7 +44,10 @@
 		"node": "^20 || >= 22"
 	},
 	"devDependencies": {
+		"@arethetypeswrong/cli": "^0.18.2",
 		"@ljharb/eslint-config": "^22.1.3",
+		"@ljharb/tsconfig": "^0.3.2",
+		"@types/tape": "^5.8.1",
 		"auto-changelog": "^2.5.0",
 		"c8": "^10.1.3",
 		"encoding": "^0.1.13",
@@ -47,7 +56,8 @@
 		"in-publish": "^2.0.1",
 		"npmignore": "^0.3.5",
 		"safe-publish-latest": "^2.0.0",
-		"tape": "^5.9.0"
+		"tape": "^5.9.0",
+		"typescript": "next"
 	},
 	"testling": {
 		"files": "test/*.js"
@@ -62,10 +72,12 @@
 	},
 	"publishConfig": {
 		"ignore": [
+			".attw.json",
 			".github/workflows",
 			"test",
 			".nycrc",
-			"eslint.config.mjs"
+			"eslint.config.mjs",
+			"tsconfig.json"
 		]
 	}
 }

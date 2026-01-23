@@ -5,6 +5,8 @@ import { existsSync } from 'fs';
 import { join, sep } from 'path';
 import { parseArgs } from 'util';
 
+import parseNVMRC from './index.mjs';
+
 const {
 	values: {
 		help,
@@ -53,42 +55,14 @@ const contentsP = readFile(file);
 
 const contentsStr = `${await contentsP}`;
 
-const rawOptions = contentsStr
-	.split('\n')
-	.map((x) => x.replace(/#.*$/, '').trim())
-	.filter(Boolean);
+const result = parseNVMRC(contentsStr);
 
-const optionsEntries = rawOptions.map((x) => ((/[=]/).test(x)
-	? x.split('=').map((y) => y.trim())
-	: ['node', x]
-));
+if (!result.success) {
+	console.error(`\n${result.errorMessage}\n`);
 
-const map = new Map(optionsEntries);
-
-if (
-	map.size !== optionsEntries.length
-	|| !map.has('node')
-	|| rawOptions.filter((x) => !x.includes('=')).length !== 1
-	|| (/^\s*[~^><=]/).test(map.get('node').trim())
-) {
-	console.error(`
-invalid .nvmrc!
-all non-commented content (anything after # is a comment) must be either:
-  - a single bare nvm-recognized version-ish
-  - or, multiple distinct key-value pairs, each key/value separated by a single equals sign (=)
-
-additionally, a single bare nvm-recognized version-ish must be present (after stripping comments).
-
-Note that nvm does not understand semver ranges.
-`);
-
-	console.warn(`
-non-commented content parsed:
-${rawOptions.join('\n')}`);
+	console.warn(`\nnon-commented content parsed:\n${result.rawOptions.join('\n')}`);
 
 	process.exit(1);
 }
 
-const options = Object.fromEntries(optionsEntries);
-
-console.log(JSON.stringify(options, null, '\t').replace(/\n\s*/g, ' '));
+console.log(JSON.stringify(result.options, null, '\t').replace(/\n\s*/g, ' '));
