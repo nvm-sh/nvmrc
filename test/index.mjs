@@ -52,6 +52,19 @@ test('nvmrc', async (t) => {
 		);
 	});
 
+	t.test('nonexistent file with Windows sep', async (st) => {
+		const cwd = dirname;
+		const { status, stderr } = spawnSync(
+			process.execPath,
+			['--no-warnings', '--loader', join(dirname, 'win-sep-loader.mjs'), bin],
+			{ cwd },
+		);
+		st.notEqual(status, 0, 'yields a nonzero exit code');
+		const stderrStr = String(stderr);
+		st.notEqual(stderrStr, '', 'stderr is nonempty');
+		st.ok(stderrStr.includes('\\'), 'stderr contains backslash separator');
+	});
+
 	t.test('too many files', async (st) => {
 		const { status, stdout, stderr } = spawnSync(`${bin}`, ['a', 'b']);
 
