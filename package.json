@@ -45,7 +45,7 @@
 	},
 	"devDependencies": {
 		"@arethetypeswrong/cli": "^0.18.5",
-		"@ljharb/eslint-config": "^22.2.3",
+		"@ljharb/eslint-config": "^22.2.4",
 		"@ljharb/tsconfig": "^0.3.2",
 		"@types/tape": "^5.8.1",
 		"auto-changelog": "^2.6.0",
