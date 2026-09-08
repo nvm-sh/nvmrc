@@ -3,7 +3,7 @@ const { fromEntries } = Object;
 /** @type {(contentsStr: string) => string[]} */
 function parseRawOptions(contentsStr) {
 	return contentsStr
-		.split('\n')
+		.split(/\r?\n/)
 		.map((x) => x.replace(/#.*$/, '').trim())
 		.filter(Boolean);
 }
