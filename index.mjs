@@ -8,11 +8,17 @@ function parseRawOptions(contentsStr) {
 		.filter(Boolean);
 }
 
+/** @type {(x: string) => boolean} */
+function isKeyValuePair(x) {
+	return (/^([^=]+)=([\s\S]*)$/).test(x);
+}
+
 /** @type {(rawOptions: string[]) => [string, string][]} */
 function parseOptionsEntries(rawOptions) {
-	return rawOptions.map((x) => ((/[=]/).test(x)
-		? x.split('=').map((y) => y.trim())
-		: /** @type {const} */ (['node', x])
+	return rawOptions.map((x) => (
+		isKeyValuePair(x)
+			? x.split('=').map((y) => y.trim())
+			: /** @type {const} */ (['node', x])
 	));
 }
 
@@ -21,7 +27,7 @@ export function isValidNVMRC(rawOptions, optionsEntries, map) {
 	return !(
 		map.size !== optionsEntries.length
 		|| !map.has('node')
-		|| rawOptions.filter((x) => !x.includes('=')).length !== 1
+		|| rawOptions.filter((x) => !isKeyValuePair(x)).length !== 1
 		|| (/^\s*[~^><=]/).test(map.get('node').trim())
 	);
 }

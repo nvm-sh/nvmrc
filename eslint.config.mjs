@@ -8,6 +8,7 @@ export default [
 			'no-console': 'off',
 			'no-extra-parens': 'off',
 			'no-process-exit': 'off',
+			'prefer-named-capture-group': 'off',
 		},
 	},
 ];
