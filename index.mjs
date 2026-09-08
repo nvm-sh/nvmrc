@@ -15,11 +15,14 @@ function isKeyValuePair(x) {
 
 /** @type {(rawOptions: string[]) => [string, string][]} */
 function parseOptionsEntries(rawOptions) {
-	return rawOptions.map((x) => (
-		isKeyValuePair(x)
-			? x.split('=').map((y) => y.trim())
-			: /** @type {const} */ (['node', x])
-	));
+	return rawOptions.map((x) => {
+		const pair = (/^([^=]+)=([\s\S]*)$/).exec(x);
+		if (!pair) {
+			return /** @type {const} */ (['node', x]);
+		}
+		const [, key, value] = pair;
+		return [key.trim(), value.trim()];
+	});
 }
 
 /** @type {(rawOptions: string[], optionsEntries: [string, string][], map: Map<string, string>) => boolean} */

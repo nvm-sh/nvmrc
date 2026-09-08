@@ -4,6 +4,7 @@ export default [
 	...ljharb,
 	{
 		rules: {
+			'array-bracket-newline': 'off',
 			'func-style': 'off',
 			'no-console': 'off',
 			'no-extra-parens': 'off',
