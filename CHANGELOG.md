@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v1.2.1](https://github.com/nvm-sh/nvmrc/compare/v1.2.0...v1.2.1) - 2026-09-08
+
+### Commits
+
+- [Fix] treat a line beginning with `=` as a bare version, like `nvm` does [`be0fc38`](https://github.com/nvm-sh/nvmrc/commit/be0fc3873975150a33c9711757b8839fd9acdfaf)
+- [Tests] increase coverage [`794c91c`](https://github.com/nvm-sh/nvmrc/commit/794c91c0c1a1b53cdc2c167efd489841fbd98920)
+- [Fix] do not treat a BOM as whitespace, as `nvm` does not [`53c6fb1`](https://github.com/nvm-sh/nvmrc/commit/53c6fb1d150dcf5d865c04d5c6f4de94e3024844)
+- [actions] update workflows [`b619f13`](https://github.com/nvm-sh/nvmrc/commit/b619f1363d2b407f162c9819b6848af6c7153e65)
+- [Fix] split key/value pairs on the first `=` only [`5c59dc4`](https://github.com/nvm-sh/nvmrc/commit/5c59dc4b017ccb89b4f333f0889ea55cc2f55554)
+- [Fix] strip comments in `.nvmrc` files with CRLF line endings [`06d9f93`](https://github.com/nvm-sh/nvmrc/commit/06d9f93a3d93c15a4de966a184dc82485857d8a7)
+- [Dev Deps] update `@arethetypeswrong/cli`, `@ljharb/eslint-config`, `auto-changelog`, `eslint`, `tape` [`c4140f4`](https://github.com/nvm-sh/nvmrc/commit/c4140f477c6e5721e87a124c87bf55e87f302513)
+- [Dev Deps] update `c8`, `eslint` [`77d1715`](https://github.com/nvm-sh/nvmrc/commit/77d17156912943313bd2d55cde80004f13d95bd3)
+- [Dev Deps] update `auto-changelog` [`a8bc55a`](https://github.com/nvm-sh/nvmrc/commit/a8bc55a5ee15ab9008f695cc5e6c9afbb60cdd3c)
+- [Dev Deps] update `@ljharb/eslint-config` [`fca4313`](https://github.com/nvm-sh/nvmrc/commit/fca4313639dc6fe45e86799527835f9972a6af9c)
+
 ## [v1.2.0](https://github.com/nvm-sh/nvmrc/compare/v1.1.1...v1.2.0) - 2026-01-22
 
 ### Fixed
