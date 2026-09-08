@@ -1,10 +1,15 @@
 const { fromEntries } = Object;
 
+/** @type {(x: string) => string} */
+function trimWhitespace(x) {
+	return x.replace(/^[^\S\uFEFF]+|[^\S\uFEFF]+$/g, '');
+}
+
 /** @type {(contentsStr: string) => string[]} */
 function parseRawOptions(contentsStr) {
 	return contentsStr
 		.split(/\r?\n/)
-		.map((x) => x.replace(/#.*$/, '').trim())
+		.map((x) => trimWhitespace(x.replace(/#.*$/, '')))
 		.filter(Boolean);
 }
 
@@ -21,7 +26,7 @@ function parseOptionsEntries(rawOptions) {
 			return /** @type {const} */ (['node', x]);
 		}
 		const [, key, value] = pair;
-		return [key.trim(), value.trim()];
+		return [trimWhitespace(key), trimWhitespace(value)];
 	});
 }
 

@@ -195,6 +195,19 @@ test('parseNVMRC', async (t) => {
 			success: true,
 		});
 	});
+
+	t.test('does not treat a BOM as whitespace, as `nvm` does not', async (st) => {
+		const bomOnlyLine = parseNVMRC('\uFEFF# comment\n20');
+
+		st.equal(bomOnlyLine.success, false, 'a line left holding only a BOM is content, not blank');
+		if (!bomOnlyLine.success) {
+			st.deepEqual(bomOnlyLine.rawOptions, ['\uFEFF', '20'], 'the BOM survives comment stripping');
+		}
+
+		const trailing = parseNVMRC('20\n\uFEFF');
+
+		st.equal(trailing.success, false, 'a trailing BOM line is a second bare version');
+	});
 });
 
 test('isValidNVMRC', async (t) => {
