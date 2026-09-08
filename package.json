@@ -73,6 +73,7 @@
 	"publishConfig": {
 		"ignore": [
 			".attw.json",
+			".gitattributes",
 			".github/workflows",
 			"test",
 			".nycrc",
