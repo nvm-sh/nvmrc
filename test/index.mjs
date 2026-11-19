@@ -121,7 +121,12 @@ test('nvmrc', async (t) => {
 
 			const expected = JSON.parse(`${readFileSync(join(cwd, 'expected.json'))}`);
 
-			st.deepEqual(lines.slice(expectedLines.length), expected, `fixture ${fixture} produces expected warning lines`);
+			st.deepEqual(
+				lines.slice(expectedLines.length),
+				// eslint-disable-next-line no-control-regex
+				expected.map((/** @type {string} */ x) => x.replace(/[\x01-\x08\x0B-\x1F\x7F]/g, '?')),
+				`fixture ${fixture} produces expected warning lines`,
+			);
 		});
 	}
 });

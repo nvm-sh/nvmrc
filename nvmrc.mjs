@@ -60,7 +60,9 @@ const result = parseNVMRC(contentsStr);
 if (!result.success) {
 	console.error(`\n${result.errorMessage}\n`);
 
-	console.warn(`\nnon-commented content parsed:\n${result.rawOptions.join('\n')}`);
+	// show control characters (other than tabs) as `?`, as `nvm` does, so the parsed content prints as plain text
+	// eslint-disable-next-line no-control-regex
+	console.warn(`\nnon-commented content parsed:\n${result.rawOptions.join('\n').replace(/[\x01-\x08\x0B-\x1F\x7F]/g, '?')}`);
 
 	process.exit(1);
 }
