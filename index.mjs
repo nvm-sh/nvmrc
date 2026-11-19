@@ -30,10 +30,14 @@ function parseOptionsEntries(rawOptions) {
 	});
 }
 
+// eslint-disable-next-line no-control-regex
+const controlCharacter = /[\x01-\x08\x0B-\x1F\x7F]/;
+
 /** @type {(rawOptions: string[], optionsEntries: [string, string][], map: Map<string, string>) => boolean} */
 export function isValidNVMRC(rawOptions, optionsEntries, map) {
 	return !(
 		map.size !== optionsEntries.length
+		|| rawOptions.some((x) => controlCharacter.test(x))
 		|| !map.has('node')
 		|| rawOptions.filter((x) => !isKeyValuePair(x)).length !== 1
 		|| (/^\s*[~^><=]/).test(map.get('node').trim())

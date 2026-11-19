@@ -208,6 +208,29 @@ test('parseNVMRC', async (t) => {
 
 		st.equal(trailing.success, false, 'a trailing BOM line is a second bare version');
 	});
+
+	t.test('rejects control characters other than tabs, as `nvm` does', async (st) => {
+		for (const char of ['\u0001', '\u0007', '\u001B', '\r', '\v', '\f', '\u007F']) {
+			const inVersion = parseNVMRC(`2${char}0`);
+			st.equal(inVersion.success, false, `${JSON.stringify(char)} inside a version is invalid`);
+			if (!inVersion.success) {
+				st.deepEqual(inVersion.rawOptions, [`2${char}0`], 'rawOptions keeps the raw content');
+			}
+
+			st.equal(parseNVMRC(`20\nfoo=b${char}r`).success, false, `${JSON.stringify(char)} inside a key=value line is invalid`);
+		}
+
+		st.deepEqual(
+			parseNVMRC('\tlts/*\t\nfoo\t=\tb\tr'),
+			{ options: { foo: 'b\tr', node: 'lts/*' }, success: true },
+			'tabs are valid',
+		);
+		st.deepEqual(
+			parseNVMRC('20 # \u001B[31mred\u001B[0m\r\n'),
+			{ options: { node: '20' }, success: true },
+			'control characters in comments, and CRLF line endings, are valid',
+		);
+	});
 });
 
 test('isValidNVMRC', async (t) => {
