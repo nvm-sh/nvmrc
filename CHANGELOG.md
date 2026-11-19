@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v1.2.2](https://github.com/nvm-sh/nvmrc/compare/v1.2.1...v1.2.2) - 2026-11-18
+
+### Commits
+
+- [Fix] show control characters in the parsed content as `?`, as `nvm` does [`d3265c1`](https://github.com/nvm-sh/nvmrc/commit/d3265c1a61b488d17b176ab1673c3e09ae9c1567)
+- [Fix] reject control characters other than tabs, as `nvm` does [`0b2c1a5`](https://github.com/nvm-sh/nvmrc/commit/0b2c1a514d42eb18f0c1e9c4b19245ac9ca3cbf7)
+- [Dev Deps] update `@ljharb/eslint-config`, `auto-changelog`, `eslint`, `npmignore`, `tape` [`a531457`](https://github.com/nvm-sh/nvmrc/commit/a53145783f581e2b958b1bf0a89d50660e061c9b)
+- [meta] remove redundant `types` export condition [`16f3e97`](https://github.com/nvm-sh/nvmrc/commit/16f3e97af009e2a1c1507305b65ef1c2ed269fc7)
+- [meta] add `sideEffects` [`c3d90fc`](https://github.com/nvm-sh/nvmrc/commit/c3d90fcad0b82f33001fc34c2b239abd5d251913)
+- [meta] no need to publish .gitattributes [`1aab624`](https://github.com/nvm-sh/nvmrc/commit/1aab624bda1d724228814602438aaa4c59ca6a0e)
+
 ## [v1.2.1](https://github.com/nvm-sh/nvmrc/compare/v1.2.0...v1.2.1) - 2026-09-08
 
 ### Commits
